@@ -1,3 +1,6 @@
+/*
+Este é o arquivo principal do programa, onde a execução começa. Ele é responsável por carregar os usuários do arquivo, apresentar um menu para o usuário escolher entre cadastrar, fazer login, listar usuários ou sair, e salvar os usuários de volta no arquivo ao sair. Ele utiliza as funções definidas em "usuarioService.h" para gerenciar os usuários e "arquivoUtils.h" para lidar com a leitura e escrita dos arquivos.
+*/
 #include <iostream>
 #include <vector>
 #include "services/usuarioService.h"
@@ -9,8 +12,10 @@ int main() {
     std::vector<Usuario> usuarios;
     Usuario usuarioLogado;
 
-    carregarUsuarios(usuarios, "../dados/usuarios.txt");
+    // Parte responsável por carregar os usuários do arquivo ao iniciar o programa
+    carregarUsuarios(usuarios, "../dados/usuarios.txt"); // Ajuste o caminho conforme necessário
 
+    // Loop principal do programa, onde o usuário pode escolher entre cadastrar, fazer login, listar usuários ou sair
     int opcao;
     while (1) {
         std::cout << "\n========= BEM VINDO AO FLUXO FINANCEIRO =========\n";
