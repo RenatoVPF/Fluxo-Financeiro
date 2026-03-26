@@ -68,3 +68,65 @@ void carregarUsuarios(std::vector<Usuario>& usuarios, const std::string& nomeArq
     // Fecha o arquivo
     arquivo.close();
 }
+
+// Salva os lançamentos no arquivo
+void salvarLancamentos(const std::vector<Lancamento>& lancamentos, const std::string& nomeArquivo) {
+    std::ofstream arquivo(nomeArquivo);
+
+    if (!arquivo.is_open()) {
+        std::cout << "Erro ao abrir o arquivo para salvar lancamentos.\n";
+        return;
+    }
+
+    for (const Lancamento& lancamento : lancamentos) {
+        arquivo << lancamento.id << ";"
+                << lancamento.idUsuario << ";"
+                << lancamento.descricao << ";"
+                << lancamento.tipo << ";"
+                << lancamento.valor << ";"
+                << lancamento.mes << ";"
+                << lancamento.ano << "\n";
+    }
+
+    arquivo.close();
+}
+
+// Carrega os lançamentos do arquivo
+void carregarLancamentos(std::vector<Lancamento>& lancamentos, const std::string& nomeArquivo) {
+    std::ifstream arquivo(nomeArquivo);
+
+    if (!arquivo.is_open()) {
+        return;
+    }
+
+    lancamentos.clear();
+
+    std::string linha;
+    while (std::getline(arquivo, linha)) {
+        std::stringstream ss(linha);
+        std::string campo;
+        Lancamento lancamento;
+
+        std::getline(ss, campo, ';');
+        lancamento.id = std::stoi(campo);
+
+        std::getline(ss, campo, ';');
+        lancamento.idUsuario = std::stoi(campo);
+
+        std::getline(ss, lancamento.descricao, ';');
+        std::getline(ss, lancamento.tipo, ';');
+
+        std::getline(ss, campo, ';');
+        lancamento.valor = std::stof(campo);
+
+        std::getline(ss, campo, ';');
+        lancamento.mes = std::stoi(campo);
+
+        std::getline(ss, campo, ';');
+        lancamento.ano = std::stoi(campo);
+
+        lancamentos.push_back(lancamento);
+    }
+
+    arquivo.close();
+}
