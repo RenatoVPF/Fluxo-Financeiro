@@ -9,7 +9,7 @@ void cadastrarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& us
 void listarLancamentos(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
 
 float calcularTotaisGanhos(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
-float calcularGastosobrifatorios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
+float calcularGastosObrigatorios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
 float calcularGastosNaoObrigatorios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
 float calcularSaldoMensal(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
 
