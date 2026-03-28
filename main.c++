@@ -19,8 +19,8 @@ int main() {
     Usuario usuarioLogado;
 
     // Parte responsável por carregar os usuários do arquivo ao iniciar o programa
-    carregarUsuarios(usuarios, "../dados/usuarios.txt"); // Ajuste o caminho conforme necessário
-    carregarLancamentos(lancamentos, "../dados/lancamentos.txt"); // Ajuste o caminho conforme necessário
+    carregarUsuarios(usuarios, "dados/usuarios.txt"); // Ajuste o caminho conforme necessário
+    carregarLancamentos(lancamentos, "dados/lancamentos.txt"); // Ajuste o caminho conforme necessário
 
     // Loop principal do programa, onde o usuário pode escolher entre cadastrar, fazer login, listar usuários ou sair
     int opcao;
@@ -35,13 +35,13 @@ int main() {
         std::cin >> opcao;
 
         if (opcao == 4) {
-            salvarUsuarios(usuarios, "usuarios.txt");
+            salvarUsuarios(usuarios, "../dados/usuarios.txt");
             std::cout << "Saindo...\n";
             break;
         }
         else if (opcao == 1) {
             cadastrarUsuario(usuarios);
-            salvarUsuarios(usuarios, "usuarios.txt");
+            salvarUsuarios(usuarios, "../dados/usuarios.txt");
         }
         else if (opcao == 2) {
             if (fazerLogin(usuarios, usuarioLogado)) {
@@ -57,13 +57,13 @@ int main() {
                     std::cout << "Escolha: ";
                     std::cin >> opcaoUsuario;
 
-                    if(opcaoUsuario == 3){
+                    if(opcaoUsuario == 4){
                         std::cout << "Fazendo logout...\n";
                         break;
                     }
                     else if(opcaoUsuario == 1){
                         cadastrarLancamento(lancamentos, usuarioLogado);
-                        salvarLancamentos(lancamentos, "lancamentos.txt");
+                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
                     }
                     else if(opcaoUsuario == 2){
                         listarLancamentos(lancamentos, usuarioLogado);
