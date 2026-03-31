@@ -25,6 +25,7 @@ int main() {
     // Loop principal do programa, onde o usuário pode escolher entre cadastrar, fazer login, listar usuários ou sair
     int opcao;
     int opcaoUsuario;
+    
     while (1) {
         std::cout << "\n========= BEM VINDO AO FLUXO FINANCEIRO =========\n";
         std::cout << "1. Cadastrar Usuario\n";
@@ -49,31 +50,77 @@ int main() {
 
                 // Menu do usuário logado
                 while(1){
-                    std::cout << "\n=== MENU DO USUÁRIO ===\n";
-                    std::cout << "1. Cadastrar Lancamento\n";
-                    std::cout << "2. Listar Lancamentos\n";
-                    std::cout << "3. Mostrar Resumo Financeiro\n";
-                    std::cout << "4. Logout\n";
+                    std::cout << "\n===== MENU DO USUARIO =====\n";
+                    std::cout << "1 - Cadastrar lancamento\n";
+                    std::cout << "2 - Listar meus lancamentos\n";
+                    std::cout << "3 - Mostrar resumo atual\n";
+                    std::cout << "4 - Mostrar resumo de um mes especifico\n";
+                    std::cout << "5 - Mostrar resumo de um periodo\n";
+                    std::cout << "6 - Logout\n";
                     std::cout << "Escolha: ";
                     std::cin >> opcaoUsuario;
 
-                    if(opcaoUsuario == 4){
-                        std::cout << "Fazendo logout...\n";
-                        break;
-                    }
-                    else if(opcaoUsuario == 1){
+                    int mes, ano, mesInicial, anoInicial, mesFinal, anoFinal;
+
+
+                   if (opcaoUsuario == 1) {
                         cadastrarLancamento(lancamentos, usuarioLogado);
-                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+                        salvarLancamentos(lancamentos, "lancamentos.txt");
                     }
-                    else if(opcaoUsuario == 2){
+                    else if (opcaoUsuario == 2) {
                         listarLancamentos(lancamentos, usuarioLogado);
                     }
-                    else if(opcaoUsuario == 3){
-                        
-                        mostrarResumoFinaceiro(lancamentos, usuarioLogado);
+                    else if (opcaoUsuario == 3) {
+                        mostrarResumoFinaceiroAtual(lancamentos, usuarioLogado);
                     }
-                    else{
-                        std::cout << "Opcao invalida. Tente novamente.\n";
+                    else if (opcaoUsuario == 4) {
+                        std::cout << "Informe o mes: ";
+                        std::cin >> mes;
+
+                        std::cout << "Informe o ano: ";
+                        std::cin >> ano;
+
+                        if (mes < 1 || mes > 12) {
+                            std::cout << "Mes invalido.\n";
+                        }
+                        else {
+                            mostrarResumoFinaceiroPeriodo(lancamentos, usuarioLogado, mes, ano, mes, ano);
+                        }
+                    }
+                    else if (opcaoUsuario == 5) {
+                        std::cout << "Informe o mes inicial: ";
+                        std::cin >> mesInicial;
+
+                        std::cout << "Informe o ano inicial: ";
+                        std::cin >> anoInicial;
+
+                        std::cout << "Informe o mes final: ";
+                        std::cin >> mesFinal;
+
+                        std::cout << "Informe o ano final: ";
+                        std::cin >> anoFinal;
+
+                        if (mesInicial < 1 || mesInicial > 12 || mesFinal < 1 || mesFinal > 12) {
+                            std::cout << "Mes invalido.\n";
+                        }
+                        else {
+                            int dataInicial = anoInicial * 12 + mesInicial;
+                            int dataFinal = anoFinal * 12 + mesFinal;
+
+                            if (dataInicial > dataFinal) {
+                                std::cout << "Periodo invalido. A data inicial nao pode ser maior que a data final.\n";
+                            }
+                            else {
+                                mostrarResumoFinaceiroPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+                            }
+                        }
+                    }
+                    else if (opcaoUsuario == 6) {
+                        std::cout << "Logout realizado.\n";
+                        break;
+                    }
+                    else {
+                        std::cout << "Opcao invalida.\n";
                     }
                 }
             }

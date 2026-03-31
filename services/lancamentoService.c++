@@ -100,12 +100,49 @@ void listarLancamentos(const std::vector<Lancamento>& lancamentos, const Usuario
     }
 }
 
+//Função responsável por verificar se um lançamento está dentro de um período
+bool estaDentroDoPeriodo(const Lancamento& lancamento, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    // Para comparar as datas, convertemos o mês e o ano em um único valor (ano * 12 + mês), o que facilita a comparação
+    int dataLancamento = lancamento.ano * 12 + lancamento.mes;
+    int dataInicial = anoInicial * 12 + mesInicial;
+    int dataFinal = anoFinal * 12 + mesFinal;
+
+    return dataLancamento >= dataInicial && dataLancamento <= dataFinal;
+}
+
+bool obterPeriodoMaisResente(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int& mesMaisRecente, int& anoMaisRecente){
+   
+    bool encontrou = false;
+
+    int maiorData = 0;
+
+    for(const Lancamento& lancamento : lancamentos){
+        
+        // Verifica se o lançamento pertence ao usuário logado
+        if (lancamento.idUsuario == usuarioLogado.id) {
+
+            // Converte a data do lançamento para facilitar a comparação
+            int dataAtual = lancamento.ano * 12 + lancamento.mes;
+
+            // Se ainda não encontrou nenhum lançamento
+            // ou se a data atual for mais recente, atualiza
+            if (!encontrou || dataAtual > maiorData) {
+                encontrou = true;
+                maiorData = dataAtual;
+                mesMaisRecente = lancamento.mes;
+                anoMaisRecente = lancamento.ano;
+            }
+        }
+    }
+    return encontrou;
+}
+
 // Função responsável por calcular o total de ganhos do usuário logado
-float calcularTotaisGanhos(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado){
+float calcularTotaisGanhosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
     float totalGanhos= 0.0f;
 
     for(const Lancamento& lancamento : lancamentos){
-        if(lancamento.idUsuario == usuarioLogado.id && lancamento.tipo == "ganho"){
+        if(lancamento.idUsuario == usuarioLogado.id && lancamento.tipo == "ganho" && estaDentroDoPeriodo(lancamento, mesInicial, anoInicial, mesFinal, anoFinal)){
             totalGanhos += lancamento.valor;
         }
     }
@@ -113,11 +150,11 @@ float calcularTotaisGanhos(const std::vector<Lancamento>& lancamentos, const Usu
     return totalGanhos;
 }
 
-float calcularGastosObrigatorios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado){
+float calcularGastosObrigatoriosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
     float totalGastosObrigatorios= 0.0f;
 
     for(const Lancamento& lancamento : lancamentos){
-        if(lancamento.idUsuario == usuarioLogado.id && lancamento.tipo == "obrigatorio"){
+        if(lancamento.idUsuario == usuarioLogado.id && lancamento.tipo == "obrigatorio" && estaDentroDoPeriodo(lancamento, mesInicial, anoInicial, mesFinal, anoFinal)){
             totalGastosObrigatorios += lancamento.valor;
         }
     }
@@ -126,11 +163,11 @@ float calcularGastosObrigatorios(const std::vector<Lancamento>& lancamentos, con
     
 }
 
-float calcularGastosNaoObrigatorios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado){
+float calcularGastosNaoObrigatoriosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
     float totalGastosNaoObrigatorios= 0.0f;
 
     for(const Lancamento& lancamento : lancamentos){
-        if(lancamento.idUsuario == usuarioLogado.id && lancamento.tipo == "nao_obrigatorio"){
+        if(lancamento.idUsuario == usuarioLogado.id && lancamento.tipo == "nao_obrigatorio" && estaDentroDoPeriodo(lancamento, mesInicial, anoInicial, mesFinal, anoFinal)){
             totalGastosNaoObrigatorios += lancamento.valor;
         }
     }
@@ -139,25 +176,45 @@ float calcularGastosNaoObrigatorios(const std::vector<Lancamento>& lancamentos, 
 }
 
 // Função responsável por calcular o saldo mensal do usuário logado, subtraindo os gastos dos ganhos
-float calcularSaldoMensal(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado){
-    float totalGanhos = calcularTotaisGanhos(lancamentos, usuarioLogado);
-    float totalGastosObrigatorios = calcularGastosObrigatorios(lancamentos, usuarioLogado);
-    float totalGastosNaoObrigatorios = calcularGastosNaoObrigatorios(lancamentos, usuarioLogado);
+float calcularSaldoMensalPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    float totalGanhos = calcularTotaisGanhosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float totalGastosObrigatorios = calcularGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float totalGastosNaoObrigatorios = calcularGastosNaoObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
 
     return totalGanhos - (totalGastosObrigatorios + totalGastosNaoObrigatorios);
     
 }
 
-void mostrarResumoFinaceiro(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado){
-    float ganhos = calcularTotaisGanhos(lancamentos, usuarioLogado);
-    float obrigatorios = calcularGastosObrigatorios(lancamentos, usuarioLogado);
-    float naoObrigatorios = calcularGastosNaoObrigatorios(lancamentos, usuarioLogado);
-    float saldo = calcularSaldoMensal(lancamentos, usuarioLogado);
 
-    std::cout << "\n=== RESUMO FINANCEIRO ===\n";
+
+void mostrarResumoFinaceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    float ganhos = calcularTotaisGanhosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float obrigatorios = calcularGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float naoObrigatorios = calcularGastosNaoObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float saldo = calcularSaldoMensalPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    
+    std::cout << "\n=== RESUMO FINANCEIRO DO PERIODO ===\n";
     std::cout << "Usuario: " << usuarioLogado.nome << "\n";
+    std::cout << "Periodo: " << mesInicial << "/" << anoInicial << " ate " << mesFinal << "/" << anoFinal << "\n";
     std::cout << "Ganhos: R$ " << std::fixed << std::setprecision(2) << ganhos << "\n";
     std::cout << "Gastos obrigatorios: R$ " << obrigatorios << "\n";
     std::cout << "Gastos nao obrigatorios: R$ " << naoObrigatorios << "\n";
-    std::cout << "Saldo mensal: R$ " << saldo << "\n";
+    std::cout << "Saldo: R$ " << saldo << "\n";
+}
+
+// Função responsável por mostrar o resumo mais recente do usuário logado
+void mostrarResumoAtual(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado) {
+    int mesMaisRecente;
+    int anoMaisRecente;
+
+    // Verifica se existe pelo menos um lançamento do usuário
+    if (!obterPeriodoMaisResente(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente)) {
+        std::cout << "\nNenhum lancamento encontrado para o usuario.\n";
+        return;
+    }
+
+    std::cout << "\n==== RESUMO ATUAL ====\n";
+
+    // Usa o mês mais recente como período inicial e final
+    mostrarResumoFinaceiroPeriodo(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente, mesMaisRecente, anoMaisRecente);
 }
