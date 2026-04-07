@@ -18,7 +18,7 @@ void listarLancamentos(const std::vector<Lancamento>& lancamentos, const Usuario
 
 bool estaDentroDoPeriodo(const Lancamento& lancamento, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
 
-bool obterPeriodoMaisResente(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int& mesMaisRecente, int& anoMaisRecente);
+bool obterPeriodoMaisRecente(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int& mesMaisRecente, int& anoMaisRecente);
 
 float calcularTotaisGanhosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
 
@@ -28,9 +28,21 @@ float calcularGastosNaoObrigatoriosPeriodo(const std::vector<Lancamento>& lancam
 
 float calcularSaldoMensalPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
 
-void mostrarResumoFinaceiroAtual(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
+int calcularQuantidadeMesesPeriodo(int mesInicial, int anoInicial, int mesFinal, int anoFinal);
 
-void mostrarResumoFinaceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
+float calcularMediaGastosObrigatoriosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesfinal, int anoFinal);
+
+float calcularReservaMinimaPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
+
+float calcularReservaIdealPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
+
+float calcularReservaReforcadaPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
+
+void listarLancamentosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
+
+void mostrarResumoFinanceiroAtual(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
+
+void mostrarResumoFinanceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
 
 
 

@@ -110,7 +110,7 @@ bool estaDentroDoPeriodo(const Lancamento& lancamento, int mesInicial, int anoIn
     return dataLancamento >= dataInicial && dataLancamento <= dataFinal;
 }
 
-bool obterPeriodoMaisResente(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int& mesMaisRecente, int& anoMaisRecente){
+bool obterPeriodoMaisRecente(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int& mesMaisRecente, int& anoMaisRecente){
    
     bool encontrou = false;
 
@@ -185,30 +185,114 @@ float calcularSaldoMensalPeriodo(const std::vector<Lancamento>& lancamentos, con
     
 }
 
+int calcularQuantidadeMesesPeriodo(int mesInicial, int anoInicial, int mesFinal, int anoFinal){
 
+    int dataInicial = anoInicial * 12 + mesInicial;
+    int dataFinal = anoFinal * 12 + mesFinal;
+    // +1 para incluir o mês inicial no cálculo
+    return dataFinal - dataInicial + 1; 
 
-void mostrarResumoFinaceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+}
+
+float calcularMediaGastosObrigatoriosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    // Calcula o total de gastos obrigatórios no período
+    float totalObrigatorios = calcularGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    // Calcula a quantidade de meses no período
+    int quantidadeMeses = calcularQuantidadeMesesPeriodo(mesInicial, anoInicial, mesFinal, anoFinal);
+
+    // Evita divisão por zero
+    if (quantidadeMeses <= 0) {
+        return 0.0f;
+    }
+    // Retorna a média mensal de gastos obrigatórios
+    return totalObrigatorios / quantidadeMeses;
+
+}
+
+// Função responsável por calcular a reserva mínima recomendada para o periodo de 3 meses
+float calcularReservaMinimaPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    // A reserva mínima recomendada é geralmente considerada como 3 vezes os gastos obrigatórios mensais
+    float mediaGastosObrigatorios = calcularMediaGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    return mediaGastosObrigatorios * 3;
+
+}
+
+// Função responsável por calcular a reserva ideal recomendada para o periodo de 6 meses
+float calcularReservaIdealPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    // A reserva ideal recomendada é geralmente considerada como 6 vezes os gastos obrigatórios mensais
+    float mediaGastosObrigatorios = calcularMediaGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    return mediaGastosObrigatorios * 6;
+}
+
+// Função responsável por calcular a reserva reforçada recomendada para o periodo de 12 meses
+float calcularReservaReforcadaPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    // A reserva reforçada recomendada é geralmente considerada como 12 vezes os gastos obrigatórios mensais
+    float mediaGastosObrigatorios = calcularMediaGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    return mediaGastosObrigatorios * 12;
+}
+
+// Função responsável por listar os lançamentos do usuário logado dentro de um período específico
+void listarLancamentosPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
+    bool encontrou = false;
+
+    std::cout << "\n=== LANCAMENTOS DO PERIODO ===\n";
+    std::cout << "Usuario: " << usuarioLogado.nome << "\n";
+    std::cout << "Periodo: " << mesInicial << "/" << anoInicial
+              << " ate " << mesFinal << "/" << anoFinal << "\n\n";
+
+    for (const Lancamento& lancamento : lancamentos) {
+        if (lancamento.idUsuario == usuarioLogado.id &&
+            estaDentroDoPeriodo(lancamento, mesInicial, anoInicial, mesFinal, anoFinal)) {
+
+            encontrou = true;
+
+            std::cout << "ID: " << lancamento.id << "\n";
+            std::cout << "Descricao: " << lancamento.descricao << "\n";
+            std::cout << "Tipo: " << lancamento.tipo << "\n";
+            std::cout << "Valor: R$ " << std::fixed << std::setprecision(2) << lancamento.valor << "\n";
+            std::cout << "Mes/Ano: " << lancamento.mes << "/" << lancamento.ano << "\n\n";
+        }
+    }
+
+    if (!encontrou) {
+        std::cout << "Nenhum lancamento encontrado para este periodo.\n";
+    }
+}
+
+void mostrarResumoFinanceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
     float ganhos = calcularTotaisGanhosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
-    float obrigatorios = calcularGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
-    float naoObrigatorios = calcularGastosNaoObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float gastosObrigatorios = calcularGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float gastosNaoObrigatorios = calcularGastosNaoObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
     float saldo = calcularSaldoMensalPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
-    
+
+    float mediaObrigatorios = calcularMediaGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float reservaMinima = calcularReservaMinimaPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float reservaIdeal = calcularReservaIdealPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+    float reservaReforcada = calcularReservaReforcadaPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+
     std::cout << "\n=== RESUMO FINANCEIRO DO PERIODO ===\n";
     std::cout << "Usuario: " << usuarioLogado.nome << "\n";
     std::cout << "Periodo: " << mesInicial << "/" << anoInicial << " ate " << mesFinal << "/" << anoFinal << "\n";
+
     std::cout << "Ganhos: R$ " << std::fixed << std::setprecision(2) << ganhos << "\n";
-    std::cout << "Gastos obrigatorios: R$ " << obrigatorios << "\n";
-    std::cout << "Gastos nao obrigatorios: R$ " << naoObrigatorios << "\n";
+    std::cout << "Gastos obrigatorios: R$ " << gastosObrigatorios << "\n";
+    std::cout << "Gastos nao obrigatorios: R$ " << gastosNaoObrigatorios << "\n";
     std::cout << "Saldo: R$ " << saldo << "\n";
+
+    std::cout << "\n=== RESERVA DE EMERGENCIA ===\n";
+    std::cout << "Media mensal de gastos obrigatorios: R$ " << mediaObrigatorios << "\n";
+    std::cout << "Reserva minima (3 meses): R$ " << reservaMinima << "\n";
+    std::cout << "Reserva ideal (6 meses): R$ " << reservaIdeal << "\n";
+    std::cout << "Reserva reforcada (12 meses): R$ " << reservaReforcada << "\n";
 }
 
 // Função responsável por mostrar o resumo mais recente do usuário logado
-void mostrarResumoAtual(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado) {
+void mostrarResumoFinanceiroAtual(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado) {
     int mesMaisRecente;
     int anoMaisRecente;
 
     // Verifica se existe pelo menos um lançamento do usuário
-    if (!obterPeriodoMaisResente(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente)) {
+    if (!obterPeriodoMaisRecente(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente)) {
         std::cout << "\nNenhum lancamento encontrado para o usuario.\n";
         return;
     }
@@ -216,5 +300,5 @@ void mostrarResumoAtual(const std::vector<Lancamento>& lancamentos, const Usuari
     std::cout << "\n==== RESUMO ATUAL ====\n";
 
     // Usa o mês mais recente como período inicial e final
-    mostrarResumoFinaceiroPeriodo(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente, mesMaisRecente, anoMaisRecente);
+    mostrarResumoFinanceiroPeriodo(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente, mesMaisRecente, anoMaisRecente);
 }

@@ -65,13 +65,13 @@ int main() {
 
                    if (opcaoUsuario == 1) {
                         cadastrarLancamento(lancamentos, usuarioLogado);
-                        salvarLancamentos(lancamentos, "lancamentos.txt");
+                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
                     }
                     else if (opcaoUsuario == 2) {
                         listarLancamentos(lancamentos, usuarioLogado);
                     }
                     else if (opcaoUsuario == 3) {
-                        mostrarResumoFinaceiroAtual(lancamentos, usuarioLogado);
+                        mostrarResumoFinanceiroAtual(lancamentos, usuarioLogado);
                     }
                     else if (opcaoUsuario == 4) {
                         std::cout << "Informe o mes: ";
@@ -84,7 +84,7 @@ int main() {
                             std::cout << "Mes invalido.\n";
                         }
                         else {
-                            mostrarResumoFinaceiroPeriodo(lancamentos, usuarioLogado, mes, ano, mes, ano);
+                            mostrarResumoFinanceiroPeriodo(lancamentos, usuarioLogado, mes, ano, mes, ano);
                         }
                     }
                     else if (opcaoUsuario == 5) {
@@ -111,7 +111,7 @@ int main() {
                                 std::cout << "Periodo invalido. A data inicial nao pode ser maior que a data final.\n";
                             }
                             else {
-                                mostrarResumoFinaceiroPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
+                                mostrarResumoFinanceiroPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
                             }
                         }
                     }
