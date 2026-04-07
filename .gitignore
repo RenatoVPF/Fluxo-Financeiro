@@ -1,0 +1,50 @@
+# =========================
+# Arquivos de dados (persistência)
+# =========================
+*.txt
+
+# Caso queira ser mais específico:
+# data/usuarios.txt
+# data/lancamentos.txt
+
+# =========================
+# Arquivos compilados (Linux)
+# =========================
+*.out
+*.exe
+*.o
+*.a
+
+# Seu executável
+fluxoFinanceiro
+fintrack
+
+# =========================
+# Pastas de build (se criar futuramente)
+# =========================
+build/
+bin/
+
+# =========================
+# Arquivos temporários do sistema
+# =========================
+*.log
+*.tmp
+*.swp
+*~
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# CLion / JetBrains
+# =========================
+.idea/
+cmake-build-*/
+
+# =========================
+# Arquivos de dependência C++
+# =========================
+*.d
