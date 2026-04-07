@@ -91,6 +91,9 @@ No Linux:
 ```bash
 g++ main.cpp services/lancamentoService.cpp services/usuarioService.cpp utils/arquivoUtils.cpp -o fluxoFinanceiro -Iservices -Iutils -Imodelos
 
+./fluxoFinanceiro
+
+```
 ## 📌 Observações
 
 - Os dados são armazenados em arquivos `.txt`, utilizando leitura e escrita com `fstream`
