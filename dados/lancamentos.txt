@@ -1,2 +1,0 @@
-1;1;selario do mes 1;ganho;2300.5;3;2026
-2;1;conta de energia;obrigatorio;100;3;2026
