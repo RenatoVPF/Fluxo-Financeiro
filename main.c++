@@ -8,6 +8,7 @@ Ele utiliza as funções definidas em "usuarioService.h" para gerenciar os usuá
 #include <vector>
 #include "services/usuarioService.h"
 #include "utils/arquivoUtils.h"
+#include "utils/arvoreLancamentos.h"
 #include "modelos/usuarios.h"
 #include "modelos/lancamentos.h"
 #include "services/lancamentoService.h"
@@ -21,6 +22,8 @@ int main() {
     // Parte responsável por carregar os usuários do arquivo ao iniciar o programa
     carregarUsuarios(usuarios, "dados/usuarios.txt"); // Ajuste o caminho conforme necessário
     carregarLancamentos(lancamentos, "dados/lancamentos.txt"); // Ajuste o caminho conforme necessário
+
+    ordenarLancamentosPorArvore(lancamentos); // Ordena os lançamentos por data usando a árvore binária
 
     // Loop principal do programa, onde o usuário pode escolher entre cadastrar, fazer login, listar usuários ou sair
     int opcao;
@@ -37,6 +40,7 @@ int main() {
 
         if (opcao == 4) {
             salvarUsuarios(usuarios, "../dados/usuarios.txt");
+            salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
             std::cout << "Saindo...\n";
             break;
         }
@@ -65,6 +69,7 @@ int main() {
 
                    if (opcaoUsuario == 1) {
                         cadastrarLancamento(lancamentos, usuarioLogado);
+                        ordenarLancamentosPorArvore(lancamentos);
                         salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
                     }
                     else if (opcaoUsuario == 2) {
