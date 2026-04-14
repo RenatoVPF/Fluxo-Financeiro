@@ -14,6 +14,7 @@ struct Lancamento {
     std::string descricao;
     std::string tipo; // ganho | obrigatorio | nao_obrigatorio
     float valor;
+    int dia;
     int mes;
     int ano;
 };

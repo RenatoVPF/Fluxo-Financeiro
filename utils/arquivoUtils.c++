@@ -84,6 +84,7 @@ void salvarLancamentos(const std::vector<Lancamento>& lancamentos, const std::st
                 << lancamento.descricao << ";"
                 << lancamento.tipo << ";"
                 << lancamento.valor << ";"
+                << lancamento.dia << ";"
                 << lancamento.mes << ";"
                 << lancamento.ano << "\n";
     }
@@ -118,6 +119,9 @@ void carregarLancamentos(std::vector<Lancamento>& lancamentos, const std::string
 
         std::getline(ss, campo, ';');
         lancamento.valor = std::stof(campo);
+
+        std::getline(ss, campo, ';');
+        lancamento.dia = std::stoi(campo);
 
         std::getline(ss, campo, ';');
         lancamento.mes = std::stoi(campo);
