@@ -44,6 +44,12 @@ void mostrarResumoFinanceiroAtual(const std::vector<Lancamento>& lancamentos, co
 
 void mostrarResumoFinanceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal);
 
+int buscarIndiceLancamentoPorId(const std::vector<Lancamento>& lancamentos, int idLancamento, const Usuario& usuarioLogado);
+
+void editarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
+
+void excluirLancamento(std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
+
 
 
 

@@ -50,6 +50,14 @@ void cadastrarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& us
         return;
     }
 
+    std::cout << "Data do lancamento:\n";
+    std::cout << "Dia (1-31): ";
+    std::cin >> novoLancamento.dia;
+
+    if(novoLancamento.dia < 1 || novoLancamento.dia > 31){
+        std::cout << "Dia invalido. O dia deve ser entre 1 e 31.\n";
+        return;
+    }
     //Le o mês do lançamento
     std::cout << "Mes (1-12): ";
     std::cin >> novoLancamento.mes;
@@ -66,7 +74,7 @@ void cadastrarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& us
         std::cout << "Ano invalido. O ano deve ser entre 1900 e 2100.\n";
         return;
     }
-
+    //Adiciona o novo lançamento ao vetor de lançamentos
     lancamentos.push_back(novoLancamento);
     std::cout << "Lancamento cadastrado com sucesso!\n";
 
@@ -258,7 +266,7 @@ void listarLancamentosPeriodo(const std::vector<Lancamento>& lancamentos, const 
         std::cout << "Nenhum lancamento encontrado para este periodo.\n";
     }
 }
-
+// Função responsável por mostrar o resumo financeiro do usuário logado em um período específico, incluindo ganhos, gastos e recomendações de reserva de emergência
 void mostrarResumoFinanceiroPeriodo(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado, int mesInicial, int anoInicial, int mesFinal, int anoFinal){
     float ganhos = calcularTotaisGanhosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
     float gastosObrigatorios = calcularGastosObrigatoriosPeriodo(lancamentos, usuarioLogado, mesInicial, anoInicial, mesFinal, anoFinal);
@@ -301,4 +309,114 @@ void mostrarResumoFinanceiroAtual(const std::vector<Lancamento>& lancamentos, co
 
     // Usa o mês mais recente como período inicial e final
     mostrarResumoFinanceiroPeriodo(lancamentos, usuarioLogado, mesMaisRecente, anoMaisRecente, mesMaisRecente, anoMaisRecente);
+}
+
+// Função responsável por buscar o índice de um lançamento pelo ID, considerando apenas os lançamentos do usuário logado. Retorna -1 se o lançamento não for encontrado.
+int buscarIndiceLancamentoPorId(const std::vector<Lancamento>& lancamentos, int idLancamento, const Usuario& usuarioLogado) {
+    
+    for (int i = 0; i < lancamentos.size(); ++i) {
+        if (lancamentos[i].id == idLancamento && lancamentos[i].idUsuario == usuarioLogado.id) {
+            return i; // Retorna o índice do lançamento encontrado
+        }
+    }
+    return -1; // Retorna -1 se o lançamento não for encontrado
+}
+
+
+// Função responsável por editar um lançamento do usuário logado
+void editarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado) {
+    int idLancamento;
+
+    std::cout << "\n=== EDITAR LANCAMENTO ===\n";
+    std::cout << "Informe o ID do lancamento que deseja editar: ";
+    std::cin >> idLancamento;
+    
+    // Utiliza a função de busca para encontrar o índice do lançamento a ser editado, garantindo que o usuário só possa editar seus próprios lançamentos
+    int indice = buscarIndiceLancamentoPorId(lancamentos, idLancamento, usuarioLogado);
+
+    if (indice == -1) {
+        std::cout << "Lancamento nao encontrado.\n";
+        return;
+    }
+
+    int opcaoTipo;
+
+    std::cout << "Nova descricao: ";
+    std::cin.ignore();
+    std::getline(std::cin, lancamentos[indice].descricao);
+
+    std::cout << "Novo tipo do lancamento:\n";
+    std::cout << "1 - Ganho\n";
+    std::cout << "2 - Gasto obrigatorio\n";
+    std::cout << "3 - Gasto nao obrigatorio\n";
+    std::cout << "Escolha: ";
+    std::cin >> opcaoTipo;
+
+    if (opcaoTipo == 1) {
+        lancamentos[indice].tipo = "ganho";
+    }
+    else if (opcaoTipo == 2) {
+        lancamentos[indice].tipo = "obrigatorio";
+    }
+    else if (opcaoTipo == 3) {
+        lancamentos[indice].tipo = "nao_obrigatorio";
+    }
+    else {
+        std::cout << "Tipo invalido. Edicao cancelada.\n";
+        return;
+    }
+
+    std::cout << "Novo valor: ";
+    std::cin >> lancamentos[indice].valor;
+
+    if (lancamentos[indice].valor < 0) {
+        std::cout << "Valor invalido.\n";
+        return;
+    }
+
+    std::cout << "Novo dia: ";
+    std::cin >> lancamentos[indice].dia;
+
+    std::cout << "Novo mes: ";
+    std::cin >> lancamentos[indice].mes;
+
+    std::cout << "Novo ano: ";
+    std::cin >> lancamentos[indice].ano;
+
+    if (lancamentos[indice].dia < 1 || lancamentos[indice].dia > 31) {
+        std::cout << "Dia invalido.\n";
+        return;
+    }
+
+    if (lancamentos[indice].mes < 1 || lancamentos[indice].mes > 12) {
+        std::cout << "Mes invalido.\n";
+        return;
+    }
+
+    if (lancamentos[indice].ano < 0) {
+        std::cout << "Ano invalido.\n";
+        return;
+    }
+
+    std::cout << "Lancamento editado com sucesso!\n"; // Fazer a parte de edicao é a parte mais chatinha de se fazer, ter que refazer toda a parte de cadastro é muito repetitivo.
+}
+
+// Função responsável por excluir um lançamento do usuário logado
+void excluirLancamento(std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado) {
+    int idLancamento;
+
+    std::cout << "\n=== EXCLUIR LANCAMENTO ===\n";
+    std::cout << "Informe o ID do lancamento que deseja excluir: ";
+    std::cin >> idLancamento;
+
+    int indice = buscarIndiceLancamentoPorId(lancamentos, idLancamento, usuarioLogado);
+
+    if (indice == -1) {
+        std::cout << "Lancamento nao encontrado.\n";
+        return;
+    }
+
+    lancamentos.erase(lancamentos.begin() + indice);
+
+    std::cout << "Lancamento excluido com sucesso!\n";
 }

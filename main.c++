@@ -60,7 +60,9 @@ int main() {
                     std::cout << "3 - Mostrar resumo atual\n";
                     std::cout << "4 - Mostrar resumo de um mes especifico\n";
                     std::cout << "5 - Mostrar resumo de um periodo\n";
-                    std::cout << "6 - Logout\n";
+                    std::cout << "6 - Editar lancamento\n";
+                    std::cout << "7 - Excluir lancamento\n";
+                    std::cout << "8 - Logout\n";
                     std::cout << "Escolha: ";
                     std::cin >> opcaoUsuario;
 
@@ -121,6 +123,22 @@ int main() {
                         }
                     }
                     else if (opcaoUsuario == 6) {
+
+                        editarLancamento(lancamentos, usuarioLogado);
+
+                        ordenarLancamentosPorArvore(lancamentos);
+
+                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+                    }
+                    else if (opcaoUsuario == 7) {
+
+                        excluirLancamento(lancamentos, usuarioLogado);
+
+                        ordenarLancamentosPorArvore(lancamentos);
+                        
+                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+                    }
+                    else if (opcaoUsuario == 8) {
                         std::cout << "Logout realizado.\n";
                         break;
                     }
