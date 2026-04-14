@@ -39,14 +39,14 @@ int main() {
         std::cin >> opcao;
 
         if (opcao == 4) {
-            salvarUsuarios(usuarios, "../dados/usuarios.txt");
-            salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+            salvarUsuarios(usuarios, "dados/usuarios.txt");
+            salvarLancamentos(lancamentos, "dados/lancamentos.txt");
             std::cout << "Saindo...\n";
             break;
         }
         else if (opcao == 1) {
             cadastrarUsuario(usuarios);
-            salvarUsuarios(usuarios, "../dados/usuarios.txt");
+            salvarUsuarios(usuarios, "dados/usuarios.txt");
         }
         else if (opcao == 2) {
             if (fazerLogin(usuarios, usuarioLogado)) {
@@ -72,7 +72,7 @@ int main() {
                    if (opcaoUsuario == 1) {
                         cadastrarLancamento(lancamentos, usuarioLogado);
                         ordenarLancamentosPorArvore(lancamentos);
-                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+                        salvarLancamentos(lancamentos, "dados/lancamentos.txt");
                     }
                     else if (opcaoUsuario == 2) {
                         listarLancamentos(lancamentos, usuarioLogado);
@@ -128,15 +128,15 @@ int main() {
 
                         ordenarLancamentosPorArvore(lancamentos);
 
-                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+                        salvarLancamentos(lancamentos, "dados/lancamentos.txt");
                     }
                     else if (opcaoUsuario == 7) {
 
                         excluirLancamento(lancamentos, usuarioLogado);
 
                         ordenarLancamentosPorArvore(lancamentos);
-                        
-                        salvarLancamentos(lancamentos, "../dados/lancamentos.txt");
+
+                        salvarLancamentos(lancamentos, "dados/lancamentos.txt");
                     }
                     else if (opcaoUsuario == 8) {
                         std::cout << "Logout realizado.\n";
