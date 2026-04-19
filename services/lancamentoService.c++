@@ -4,13 +4,25 @@
 #include <iomanip>
 #include "lancamentoService.h"
 
+// Funcao responsavel por gerar um novo Id para um lançamento, garantindo que cada usuário tenha seus próprios IDs de lançamentos, evitando conflitos entre usuários diferentes. Ele percorre os lançamentos existentes do usuário logado para encontrar o maior ID e retorna o próximo ID disponível.
+int geraNovoIdLancamentoUsuarios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado) {
+    int ultimoId = 0;
+
+    for (const Lancamento& lancamento : lancamentos) {
+        if (lancamento.idUsuario == usuarioLogado.id && lancamento.id > ultimoId) {
+            ultimoId = lancamento.id;
+        }
+    }
+
+    return ultimoId + 1; // Retorna o próximo ID disponível para o usuário
+}
 
 // Função resposavel por fazer o cadastro de um novo lançamento financeiro
 void cadastrarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado){
     Lancamento novoLancamento;
     int escolhaTipo;
-    //vai gerar um ID automático para o lançamento, baseado no último ID do vetor
-    novoLancamento.id = lancamentos.empty() ? 1 : lancamentos.back().id + 1;
+    // Aqui vai ser gerado o Id baseado no ultimo id do usuario logado.
+    novoLancamento.id = geraNovoIdLancamentoUsuarios(lancamentos, usuarioLogado);
     //atribui o ID do usuário logado ao lançamento, garantindo que cada lançamento esteja associado ao usuário correto
     novoLancamento.idUsuario = usuarioLogado.id;
 

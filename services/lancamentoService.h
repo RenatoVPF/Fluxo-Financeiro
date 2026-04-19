@@ -12,6 +12,8 @@ aqui especificamente, são os prototipos das funcoes, e a implementacao delas va
 #include "../modelos/lancamentos.h"
 #include "../modelos/usuarios.h"
 
+int geraNovoIdLancamentoUsuarios(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
+
 void cadastrarLancamento(std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
 
 void listarLancamentos(const std::vector<Lancamento>& lancamentos, const Usuario& usuarioLogado);
