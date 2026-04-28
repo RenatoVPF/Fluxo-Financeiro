@@ -1,5 +1,6 @@
 #include "arvoreLancamentos.h"
-
+// Implementação da estrutura de dados em forma de árvore binária para organizar os lançamentos financeiros por data, facilitando consultas e cálculos de resumos financeiros. 
+// Cada nodo da árvore representa um lançamento financeiro, e a árvore é organizada por data para permitir buscas eficientes em períodos específicos.
 bool dataEMenor(const Lancamento& valorUm, const Lancamento& valorDois) {
 
     if (valorUm.ano != valorDois.ano) return valorUm.ano < valorDois.ano;
